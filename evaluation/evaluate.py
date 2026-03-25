@@ -374,11 +374,13 @@ def main():
     parser.add_argument('--output', type=str, help='Output JSON file for detailed results')
     parser.add_argument('--knowledge-dir', type=str, default='evaluation/knowledge',
                        help='Path to knowledge directory')
+    parser.add_argument('--questions', type=str, default='evaluation/questions.json',
+                       help='Path to questions JSON file')
 
     args = parser.parse_args()
 
     # Load questions
-    questions_file = Path('evaluation/questions.json')
+    questions_file = Path(args.questions)
     with open(questions_file) as f:
         questions_data = json.load(f)
 

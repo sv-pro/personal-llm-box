@@ -1,0 +1,554 @@
+{
+  "timestamp": "2026-03-26 01:36:57",
+  "evaluations": [
+    {
+      "strategy": "multi_query",
+      "total_questions": 18,
+      "results": [
+        {
+          "question_id": "hard-disambig-1",
+          "question_type": "hard",
+          "question": "Which memory leak was fixed first: the production authentication service leak or the test suite leak?",
+          "expected_sources": [
+            "2026-01-12-test-suite-issues.md",
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-25-infrastructure-update.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "expected_answer": "The test suite memory leak was fixed first on 2026-01-12. The production authentication service memory leak was fixed on 2026-01-22, ten days later.",
+          "strategy": "multi_query",
+          "precision": 0.2,
+          "recall": 1.0,
+          "f1_score": 0.33333333333333337,
+          "source_coverage": 1.0,
+          "query_time_ms": 7.74383544921875,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-disambig-2",
+          "question_type": "hard",
+          "question": "What caused the timeout issue that affected end users?",
+          "expected_sources": [
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-15-architecture-overview.md"
+          ],
+          "expected_answer": "Large file uploads (>50MB) were timing out because the data processing service had a 60-second timeout and files take ~1.2 seconds per MB to process, so 50MB files hit the timeout limit.",
+          "strategy": "multi_query",
+          "precision": 0.1111111111111111,
+          "recall": 1.0,
+          "f1_score": 0.19999999999999998,
+          "source_coverage": 1.0,
+          "query_time_ms": 4.161596298217773,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-inference-1",
+          "question_type": "hard",
+          "question": "Did the Redis migration contribute to fixing the authentication service memory leak?",
+          "expected_sources": [
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "expected_answer": "No. The memory leak was fixed on 2026-01-22 by implementing an LRU cache and cleanup task in the TokenCache class. The Redis migration happened on 2026-01-25, three days after the leak was already resolved.",
+          "strategy": "multi_query",
+          "precision": 0.2,
+          "recall": 1.0,
+          "f1_score": 0.33333333333333337,
+          "source_coverage": 1.0,
+          "query_time_ms": 7.0972442626953125,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-inference-2",
+          "question_type": "hard",
+          "question": "Could the database connection pool incident have been prevented by the January sprint work?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-30-incident-report-database.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-30-incident-report-database.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-02-05-performance-monitoring.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "expected_answer": "Partially. The January sprint included 'Add load testing to CI pipeline' (assigned to Alex) which could have revealed the connection pool limits. However, the incident report notes that lack of marketing communication was also a factor, which wasn't addressed in sprint planning.",
+          "strategy": "multi_query",
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1_score": 0.4,
+          "source_coverage": 1.0,
+          "query_time_ms": 7.062435150146484,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-temporal-1",
+          "question_type": "hard",
+          "question": "What was the state of the system performance on January 20th, 2026?",
+          "expected_sources": [
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-05-performance-monitoring.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-25-infrastructure-update.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "expected_answer": "On January 20th: (1) Memory leak investigation was complete (resolved Jan 22nd, so ongoing), (2) Redis was still on redis-1 (migration happened Jan 25), (3) File upload timeout was 60 seconds (increased to 300s on Jan 28), (4) No performance monitoring was in place yet (setupon Feb 5).",
+          "strategy": "multi_query",
+          "precision": 0.4,
+          "recall": 1.0,
+          "f1_score": 0.5714285714285715,
+          "source_coverage": 1.0,
+          "query_time_ms": 4.180669784545898,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-temporal-2",
+          "question_type": "hard",
+          "question": "How many days elapsed between identifying the memory leak and fully deploying the fix to production?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-01-15-architecture-overview.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "expected_answer": "The memory leak was first reported in the January sprint planning on 2026-01-18 during load testing. The fix was completed and marked RESOLVED on 2026-01-22 at 16:45. However, the investigation document notes it was 'awaiting production deployment approval from Taylor', so the actual production deployment date is not documented. We can only confirm 4 days from report to fix completion.",
+          "strategy": "multi_query",
+          "precision": 0.2222222222222222,
+          "recall": 1.0,
+          "f1_score": 0.3636363636363636,
+          "source_coverage": 1.0,
+          "query_time_ms": 6.438016891479492,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-causal-1",
+          "question_type": "hard",
+          "question": "Why did dashboard load times improve from 2.1s to 0.8s?",
+          "expected_sources": [
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-25-infrastructure-update.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-12-test-suite-issues.md"
+          ],
+          "expected_answer": "The Redis migration from redis-1 (SATA SSD, 45ms latency) to redis-2 (NVMe SSD, 8ms latency) reduced cache latency by 80%. Since the dashboard uses caching heavily, this 80% latency reduction led to the 62% improvement in load times (2.1s \u2192 0.8s).",
+          "strategy": "multi_query",
+          "precision": 0.1,
+          "recall": 1.0,
+          "f1_score": 0.18181818181818182,
+          "source_coverage": 1.0,
+          "query_time_ms": 4.851579666137695,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-causal-2",
+          "question_type": "hard",
+          "question": "What was the root cause of the root cause? In other words, why did the TokenCache have the problem that caused the memory leak?",
+          "expected_sources": [
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-15-architecture-overview.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "expected_answer": "The TokenCache implementation used a dictionary without expiration logic. The renew_token() method added new entries but never removed old ones. This is a design flaw - the cache was implemented without considering cleanup, likely due to not anticipating the scale of token renewals (1000+ per 5 minutes).",
+          "strategy": "multi_query",
+          "precision": 0.1111111111111111,
+          "recall": 1.0,
+          "f1_score": 0.19999999999999998,
+          "source_coverage": 1.0,
+          "query_time_ms": 9.692192077636719,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-negation-1",
+          "question_type": "hard",
+          "question": "Which January sprint goal was NOT completed?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "expected_answer": "Lazy loading (assigned to Jordan) has no completion documentation. All other sprint goals have documented completion: memory leak (Jan 22), Redis migration (Jan 25), timeout update (Jan 28), and API documentation (Feb 1).",
+          "strategy": "multi_query",
+          "precision": 0.4444444444444444,
+          "recall": 0.8,
+          "f1_score": 0.5714285714285714,
+          "source_coverage": 0.8,
+          "query_time_ms": 3.539562225341797,
+          "found_all_sources": false,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-negation-2",
+          "question_type": "hard",
+          "question": "What information is NOT available to determine if the memory leak fix was successfully deployed to production?",
+          "expected_sources": [
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-02-05-performance-monitoring.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-15-architecture-overview.md",
+            "2025-12-20-december-sprint-retrospective.md"
+          ],
+          "expected_answer": "The investigation document shows the fix was completed and tested (stable 250MB in testing environment), but lacks: (1) production deployment confirmation, (2) production memory usage metrics after deployment, (3) deployment approval from Taylor, (4) production validation results.",
+          "strategy": "multi_query",
+          "precision": 0.2222222222222222,
+          "recall": 1.0,
+          "f1_score": 0.3636363636363636,
+          "source_coverage": 1.0,
+          "query_time_ms": 6.386518478393555,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-comparison-1",
+          "question_type": "hard",
+          "question": "Which fix was more effective: the memory leak fix or the Redis migration?",
+          "expected_sources": [
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "expected_answer": "This is not directly comparable as they solved different problems. The memory leak fix prevented unbounded memory growth (critical correctness issue). The Redis migration improved performance by 80% latency reduction (optimization). If forced to compare: the memory leak fix was more important (system stability) but the Redis migration had broader impact (all cached operations faster).",
+          "strategy": "multi_query",
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1_score": 0.4,
+          "source_coverage": 1.0,
+          "query_time_ms": 5.138158798217773,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-comparison-2",
+          "question_type": "hard",
+          "question": "Between December and January sprints, which sprint had better outcomes?",
+          "expected_sources": [
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-02-05-performance-monitoring.md"
+          ],
+          "expected_answer": "December had higher velocity (34 vs ~30 points estimated) but January focused on quality over quantity. December ended with 12 open bugs and deployment issues. January resolved critical memory leak, improved infrastructure, and set up better practices. January had better outcomes for system stability despite lower velocity.",
+          "strategy": "multi_query",
+          "precision": 0.42857142857142855,
+          "recall": 0.75,
+          "f1_score": 0.5454545454545454,
+          "source_coverage": 0.75,
+          "query_time_ms": 4.986763000488281,
+          "found_all_sources": false,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-calculation-1",
+          "question_type": "hard",
+          "question": "How much faster is Redis-2 compared to Redis-1 in terms of latency?",
+          "expected_sources": [
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-25-infrastructure-update.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-01-28-timeout-configuration.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-01-15-architecture-overview.md"
+          ],
+          "expected_answer": "Redis-1 had 45ms latency. Redis-2 has 8ms latency. Redis-2 is 45/8 = 5.625 times faster, or 37ms faster in absolute terms, representing an 82.2% reduction in latency.",
+          "strategy": "multi_query",
+          "precision": 0.1111111111111111,
+          "recall": 1.0,
+          "f1_score": 0.19999999999999998,
+          "source_coverage": 1.0,
+          "query_time_ms": 4.652976989746094,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-calculation-2",
+          "question_type": "hard",
+          "question": "If API response time was 80ms last month and is now 45ms, and the Redis migration reduced cache latency by 80%, what was the contribution of the Redis migration to the overall API speedup?",
+          "expected_sources": [
+            "2026-01-25-infrastructure-update.md",
+            "2026-02-05-performance-monitoring.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-25-infrastructure-update.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-30-incident-report-database.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "expected_answer": "This cannot be accurately calculated with the given information. The API improvement (80ms \u2192 45ms = 35ms reduction) and Redis latency reduction (80%) are not directly comparable. We'd need to know what percentage of API response time was cache latency. However, we can infer the Redis migration contributed significantly since dashboard times improved 62% (2.1s \u2192 0.8s) which is close to the 80% cache improvement.",
+          "strategy": "multi_query",
+          "precision": 0.2,
+          "recall": 1.0,
+          "f1_score": 0.33333333333333337,
+          "source_coverage": 1.0,
+          "query_time_ms": 13.834238052368164,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-synthesis-1",
+          "question_type": "hard",
+          "question": "Summarize all performance improvements made in January 2026 and their quantified impacts.",
+          "expected_sources": [
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-05-performance-monitoring.md"
+          ],
+          "retrieved_sources": [
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "expected_answer": "1) Memory leak fix (Jan 22): Prevented unbounded growth, stabilized auth service at ~250MB. 2) Redis migration (Jan 25): 80% latency reduction (45ms \u2192 8ms), dashboard load time improved 62% (2.1s \u2192 0.8s). 3) Timeout increase (Jan 28): Eliminated failures for files up to 100MB (tested). 4) Performance monitoring setup (Feb 5, technically after January): API response time improved from 80ms (last month) to 45ms, though this measurement was in February.",
+          "strategy": "multi_query",
+          "precision": 0.4,
+          "recall": 1.0,
+          "f1_score": 0.5714285714285715,
+          "source_coverage": 1.0,
+          "query_time_ms": 5.88226318359375,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-contradiction-1",
+          "question_type": "hard",
+          "question": "What is the current Redis endpoint configuration?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-15-architecture-overview.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "expected_answer": "As of January 25, 2026, the current Redis endpoint is redis-2.internal.local. Prior to this date it was redis-1.internal.local (mentioned in sprint planning on Jan 18). The migration document is more recent and explicitly states the migration was completed.",
+          "strategy": "multi_query",
+          "precision": 0.3333333333333333,
+          "recall": 1.0,
+          "f1_score": 0.5,
+          "source_coverage": 1.0,
+          "query_time_ms": 2.4085044860839844,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-multi-hop-1",
+          "question_type": "hard",
+          "question": "Who should be contacted about issues with large file upload performance?",
+          "expected_sources": [
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-30-incident-report-database.md",
+            "2026-02-05-performance-monitoring.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-30-incident-report-database.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-12-test-suite-issues.md"
+          ],
+          "expected_answer": "Taylor. The timeout configuration document shows Taylor updated the timeout settings and deployed the fix. For ongoing performance issues, Taylor is also listed as the owner of Performance Monitoring (Feb 5 doc) and handled the connection pool incident (Jan 30 doc), indicating Taylor owns infrastructure and performance issues.",
+          "strategy": "multi_query",
+          "precision": 0.3,
+          "recall": 1.0,
+          "f1_score": 0.4615384615384615,
+          "source_coverage": 1.0,
+          "query_time_ms": 5.948305130004883,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "hard-paraphrase-1",
+          "question_type": "hard",
+          "question": "What bottleneck was eliminated to speed up user-facing response times?",
+          "expected_sources": [
+            "2026-01-25-infrastructure-update.md",
+            "2026-02-05-performance-monitoring.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-30-incident-report-database.md",
+            "2026-02-05-performance-monitoring.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2025-12-20-december-sprint-retrospective.md",
+            "2026-01-12-test-suite-issues.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-15-architecture-overview.md"
+          ],
+          "expected_answer": "The cache latency bottleneck. Redis-1 had high latency (45ms) which was a bottleneck for any cache-dependent operations. Migrating to Redis-2 with NVMe storage eliminated this bottleneck by reducing latency to 8ms, resulting in faster dashboard loads (2.1s \u2192 0.8s) and overall API improvements.",
+          "strategy": "multi_query",
+          "precision": 0.2,
+          "recall": 1.0,
+          "f1_score": 0.33333333333333337,
+          "source_coverage": 1.0,
+          "query_time_ms": 4.470586776733398,
+          "found_all_sources": true,
+          "found_any_sources": true
+        }
+      ],
+      "aggregate": {
+        "overall": {
+          "avg_precision": 0.24911816578483245,
+          "avg_recall": 0.9750000000000001,
+          "avg_f1": 0.3813168313168313,
+          "avg_source_coverage": 0.9750000000000001,
+          "avg_query_time_ms": 6.026413705613878,
+          "found_all_count": 16,
+          "found_any_count": 18,
+          "total": 18
+        },
+        "trivial": {},
+        "non_trivial": {}
+      }
+    }
+  ]
+}

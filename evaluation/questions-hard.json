@@ -1,0 +1,290 @@
+{
+  "version": "2.0-hard",
+  "description": "Hard questions requiring reasoning beyond keyword matching",
+  "questions": [
+    {
+      "id": "hard-disambig-1",
+      "type": "hard",
+      "category": "disambiguation",
+      "question": "Which memory leak was fixed first: the production authentication service leak or the test suite leak?",
+      "expected_answer": "The test suite memory leak was fixed first on 2026-01-12. The production authentication service memory leak was fixed on 2026-01-22, ten days later.",
+      "source_documents": [
+        "2026-01-12-test-suite-issues.md",
+        "2026-01-22-auth-memory-leak-investigation.md"
+      ],
+      "reasoning": "Both documents mention 'memory leak' and 'fixed'. multi_query cannot distinguish which leak the question refers to without temporal reasoning.",
+      "difficulty": 3,
+      "why_hard": "Keywords 'memory' and 'leak' appear in both documents. Requires extracting dates and understanding temporal sequence."
+    },
+    {
+      "id": "hard-disambig-2",
+      "type": "hard",
+      "category": "disambiguation",
+      "question": "What caused the timeout issue that affected end users?",
+      "expected_answer": "Large file uploads (>50MB) were timing out because the data processing service had a 60-second timeout and files take ~1.2 seconds per MB to process, so 50MB files hit the timeout limit.",
+      "source_documents": [
+        "2026-01-28-timeout-configuration.md"
+      ],
+      "reasoning": "Two different timeout issues exist: file processing timeouts (affected users) and network test timeouts (affected developers). Question uses 'end users' to disambiguate, but multi_query just finds all timeout mentions.",
+      "difficulty": 3,
+      "why_hard": "Keyword 'timeout' appears in multiple documents. Requires understanding 'end users' vs 'test suite' context."
+    },
+    {
+      "id": "hard-inference-1",
+      "type": "hard",
+      "category": "inference",
+      "question": "Did the Redis migration contribute to fixing the authentication service memory leak?",
+      "expected_answer": "No. The memory leak was fixed on 2026-01-22 by implementing an LRU cache and cleanup task in the TokenCache class. The Redis migration happened on 2026-01-25, three days after the leak was already resolved.",
+      "source_documents": [
+        "2026-01-22-auth-memory-leak-investigation.md",
+        "2026-01-25-infrastructure-update.md"
+      ],
+      "reasoning": "Requires temporal reasoning (which happened first?) and causal reasoning (did migration cause the fix?). No document explicitly states that migration did NOT fix the leak.",
+      "difficulty": 4,
+      "why_hard": "Answer requires inference from dates. Documents never explicitly state the negative relationship."
+    },
+    {
+      "id": "hard-inference-2",
+      "type": "hard",
+      "category": "inference",
+      "question": "Could the database connection pool incident have been prevented by the January sprint work?",
+      "expected_answer": "Partially. The January sprint included 'Add load testing to CI pipeline' (assigned to Alex) which could have revealed the connection pool limits. However, the incident report notes that lack of marketing communication was also a factor, which wasn't addressed in sprint planning.",
+      "source_documents": [
+        "2026-01-18-sprint-planning-notes.md",
+        "2026-01-30-incident-report-database.md"
+      ],
+      "reasoning": "Requires connecting sprint goals with incident causes, then inferring whether planned work would have prevented the incident.",
+      "difficulty": 4,
+      "why_hard": "No document explicitly connects sprint work to incident prevention. Requires causal reasoning across documents."
+    },
+    {
+      "id": "hard-temporal-1",
+      "type": "hard",
+      "category": "temporal_reasoning",
+      "question": "What was the state of the system performance on January 20th, 2026?",
+      "expected_answer": "On January 20th: (1) Memory leak investigation was complete (resolved Jan 22nd, so ongoing), (2) Redis was still on redis-1 (migration happened Jan 25), (3) File upload timeout was 60 seconds (increased to 300s on Jan 28), (4) No performance monitoring was in place yet (setupon Feb 5).",
+      "source_documents": [
+        "2026-01-22-auth-memory-leak-investigation.md",
+        "2026-01-25-infrastructure-update.md",
+        "2026-01-28-timeout-configuration.md",
+        "2026-02-05-performance-monitoring.md"
+      ],
+      "reasoning": "Requires understanding a specific point in time (Jan 20) and determining what had/hadn't happened yet based on document dates.",
+      "difficulty": 5,
+      "why_hard": "No document describes Jan 20th specifically. Requires temporal reasoning across multiple documents to reconstruct system state."
+    },
+    {
+      "id": "hard-temporal-2",
+      "type": "hard",
+      "category": "temporal_reasoning",
+      "question": "How many days elapsed between identifying the memory leak and fully deploying the fix to production?",
+      "expected_answer": "The memory leak was first reported in the January sprint planning on 2026-01-18 during load testing. The fix was completed and marked RESOLVED on 2026-01-22 at 16:45. However, the investigation document notes it was 'awaiting production deployment approval from Taylor', so the actual production deployment date is not documented. We can only confirm 4 days from report to fix completion.",
+      "source_documents": [
+        "2026-01-18-sprint-planning-notes.md",
+        "2026-01-22-auth-memory-leak-investigation.md"
+      ],
+      "reasoning": "Requires extracting dates, calculating duration, and recognizing that full deployment date is not documented (testing gap detection).",
+      "difficulty": 4,
+      "why_hard": "Requires date extraction, calculation, AND recognizing missing information."
+    },
+    {
+      "id": "hard-causal-1",
+      "type": "hard",
+      "category": "causal_reasoning",
+      "question": "Why did dashboard load times improve from 2.1s to 0.8s?",
+      "expected_answer": "The Redis migration from redis-1 (SATA SSD, 45ms latency) to redis-2 (NVMe SSD, 8ms latency) reduced cache latency by 80%. Since the dashboard uses caching heavily, this 80% latency reduction led to the 62% improvement in load times (2.1s → 0.8s).",
+      "source_documents": [
+        "2026-01-25-infrastructure-update.md"
+      ],
+      "reasoning": "Requires understanding causal chain: NVMe is faster → lower latency → faster cache → faster dashboard. Then connecting the specific numbers.",
+      "difficulty": 3,
+      "why_hard": "Answer requires understanding causality (hardware → latency → performance) and synthesizing multiple metrics from one document."
+    },
+    {
+      "id": "hard-causal-2",
+      "type": "hard",
+      "category": "causal_reasoning",
+      "question": "What was the root cause of the root cause? In other words, why did the TokenCache have the problem that caused the memory leak?",
+      "expected_answer": "The TokenCache implementation used a dictionary without expiration logic. The renew_token() method added new entries but never removed old ones. This is a design flaw - the cache was implemented without considering cleanup, likely due to not anticipating the scale of token renewals (1000+ per 5 minutes).",
+      "source_documents": [
+        "2026-01-22-auth-memory-leak-investigation.md"
+      ],
+      "reasoning": "Question asks for meta-level cause (why was the code written poorly?). Requires inferring design decisions from implementation details.",
+      "difficulty": 4,
+      "why_hard": "Requires second-order causal reasoning. Document states immediate cause but not why that cause existed."
+    },
+    {
+      "id": "hard-negation-1",
+      "type": "hard",
+      "category": "negation",
+      "question": "Which January sprint goal was NOT completed?",
+      "expected_answer": "Lazy loading (assigned to Jordan) has no completion documentation. All other sprint goals have documented completion: memory leak (Jan 22), Redis migration (Jan 25), timeout update (Jan 28), and API documentation (Feb 1).",
+      "source_documents": [
+        "2026-01-18-sprint-planning-notes.md",
+        "2026-01-22-auth-memory-leak-investigation.md",
+        "2026-01-25-infrastructure-update.md",
+        "2026-01-28-timeout-configuration.md",
+        "2026-02-01-api-documentation.md"
+      ],
+      "reasoning": "Requires finding all sprint goals, checking for completion evidence, and identifying absence of evidence.",
+      "difficulty": 4,
+      "why_hard": "Looking for negative evidence (absence of completion document). multi_query finds sprint planning but cannot detect missing completion docs."
+    },
+    {
+      "id": "hard-negation-2",
+      "type": "hard",
+      "category": "negation",
+      "question": "What information is NOT available to determine if the memory leak fix was successfully deployed to production?",
+      "expected_answer": "The investigation document shows the fix was completed and tested (stable 250MB in testing environment), but lacks: (1) production deployment confirmation, (2) production memory usage metrics after deployment, (3) deployment approval from Taylor, (4) production validation results.",
+      "source_documents": [
+        "2026-01-22-auth-memory-leak-investigation.md",
+        "2026-02-05-performance-monitoring.md"
+      ],
+      "reasoning": "Requires identifying what SHOULD be documented but isn't. Meta-level question about information completeness.",
+      "difficulty": 5,
+      "why_hard": "Asking about missing information, not present information. Requires domain knowledge of what should be documented."
+    },
+    {
+      "id": "hard-comparison-1",
+      "type": "hard",
+      "category": "comparison",
+      "question": "Which fix was more effective: the memory leak fix or the Redis migration?",
+      "expected_answer": "This is not directly comparable as they solved different problems. The memory leak fix prevented unbounded memory growth (critical correctness issue). The Redis migration improved performance by 80% latency reduction (optimization). If forced to compare: the memory leak fix was more important (system stability) but the Redis migration had broader impact (all cached operations faster).",
+      "source_documents": [
+        "2026-01-22-auth-memory-leak-investigation.md",
+        "2026-01-25-infrastructure-update.md"
+      ],
+      "reasoning": "Requires understanding that 'effective' is ambiguous - effective for what goal? Must recognize this is comparing apples to oranges.",
+      "difficulty": 5,
+      "why_hard": "Question is deliberately ambiguous. Requires understanding context and recognizing incomparable metrics."
+    },
+    {
+      "id": "hard-comparison-2",
+      "type": "hard",
+      "category": "comparison",
+      "question": "Between December and January sprints, which sprint had better outcomes?",
+      "expected_answer": "December had higher velocity (34 vs ~30 points estimated) but January focused on quality over quantity. December ended with 12 open bugs and deployment issues. January resolved critical memory leak, improved infrastructure, and set up better practices. January had better outcomes for system stability despite lower velocity.",
+      "source_documents": [
+        "2025-12-20-december-sprint-retrospective.md",
+        "2026-01-18-sprint-planning-notes.md",
+        "2026-01-22-auth-memory-leak-investigation.md",
+        "2026-01-25-infrastructure-update.md"
+      ],
+      "reasoning": "Requires synthesizing sprint goals, accomplishments, and impacts. Then comparing based on qualitative judgment of 'better outcomes'.",
+      "difficulty": 4,
+      "why_hard": "Subjective comparison requiring synthesis across multiple documents and value judgment."
+    },
+    {
+      "id": "hard-calculation-1",
+      "type": "hard",
+      "category": "calculation",
+      "question": "How much faster is Redis-2 compared to Redis-1 in terms of latency?",
+      "expected_answer": "Redis-1 had 45ms latency. Redis-2 has 8ms latency. Redis-2 is 45/8 = 5.625 times faster, or 37ms faster in absolute terms, representing an 82.2% reduction in latency.",
+      "source_documents": [
+        "2026-01-25-infrastructure-update.md"
+      ],
+      "reasoning": "Requires extracting two numbers and performing division calculation.",
+      "difficulty": 2,
+      "why_hard": "Requires arithmetic that multi_query cannot perform. Documents don't state the calculation result."
+    },
+    {
+      "id": "hard-calculation-2",
+      "type": "hard",
+      "category": "calculation",
+      "question": "If API response time was 80ms last month and is now 45ms, and the Redis migration reduced cache latency by 80%, what was the contribution of the Redis migration to the overall API speedup?",
+      "expected_answer": "This cannot be accurately calculated with the given information. The API improvement (80ms → 45ms = 35ms reduction) and Redis latency reduction (80%) are not directly comparable. We'd need to know what percentage of API response time was cache latency. However, we can infer the Redis migration contributed significantly since dashboard times improved 62% (2.1s → 0.8s) which is close to the 80% cache improvement.",
+      "source_documents": [
+        "2026-01-25-infrastructure-update.md",
+        "2026-02-05-performance-monitoring.md"
+      ],
+      "reasoning": "Trick question: looks like it needs calculation, but actually requires recognizing that the necessary data isn't present.",
+      "difficulty": 5,
+      "why_hard": "Requires recognizing that calculation cannot be performed due to missing information (what % of API time is cache?)."
+    },
+    {
+      "id": "hard-synthesis-1",
+      "type": "hard",
+      "category": "synthesis",
+      "question": "Summarize all performance improvements made in January 2026 and their quantified impacts.",
+      "expected_answer": "1) Memory leak fix (Jan 22): Prevented unbounded growth, stabilized auth service at ~250MB. 2) Redis migration (Jan 25): 80% latency reduction (45ms → 8ms), dashboard load time improved 62% (2.1s → 0.8s). 3) Timeout increase (Jan 28): Eliminated failures for files up to 100MB (tested). 4) Performance monitoring setup (Feb 5, technically after January): API response time improved from 80ms (last month) to 45ms, though this measurement was in February.",
+      "source_documents": [
+        "2026-01-22-auth-memory-leak-investigation.md",
+        "2026-01-25-infrastructure-update.md",
+        "2026-01-28-timeout-configuration.md",
+        "2026-02-05-performance-monitoring.md"
+      ],
+      "reasoning": "Requires identifying all performance-related changes in January timeline, extracting impact metrics, and presenting comprehensive summary.",
+      "difficulty": 4,
+      "why_hard": "Requires temporal filtering (January only), categorizing by type (performance), and synthesizing metrics from multiple documents."
+    },
+    {
+      "id": "hard-contradiction-1",
+      "type": "hard",
+      "category": "contradiction",
+      "question": "What is the current Redis endpoint configuration?",
+      "expected_answer": "As of January 25, 2026, the current Redis endpoint is redis-2.internal.local. Prior to this date it was redis-1.internal.local (mentioned in sprint planning on Jan 18). The migration document is more recent and explicitly states the migration was completed.",
+      "source_documents": [
+        "2026-01-18-sprint-planning-notes.md",
+        "2026-01-25-infrastructure-update.md"
+      ],
+      "reasoning": "Two documents give different answers. Requires temporal reasoning to resolve conflict (use more recent information).",
+      "difficulty": 3,
+      "why_hard": "Documents contain contradictory information. multi_query returns both without indicating which is correct."
+    },
+    {
+      "id": "hard-multi-hop-1",
+      "type": "hard",
+      "category": "multi_hop",
+      "question": "Who should be contacted about issues with large file upload performance?",
+      "expected_answer": "Taylor. The timeout configuration document shows Taylor updated the timeout settings and deployed the fix. For ongoing performance issues, Taylor is also listed as the owner of Performance Monitoring (Feb 5 doc) and handled the connection pool incident (Jan 30 doc), indicating Taylor owns infrastructure and performance issues.",
+      "source_documents": [
+        "2026-01-28-timeout-configuration.md",
+        "2026-01-30-incident-report-database.md",
+        "2026-02-05-performance-monitoring.md"
+      ],
+      "reasoning": "Requires: 1) Understanding 'file upload performance' relates to timeout config, 2) Finding who worked on timeout config, 3) Confirming this person handles performance issues by checking other docs.",
+      "difficulty": 3,
+      "why_hard": "Requires connecting 'file upload performance' → 'timeout configuration' → 'Taylor', then validating across documents."
+    },
+    {
+      "id": "hard-paraphrase-1",
+      "type": "hard",
+      "category": "paraphrase",
+      "question": "What bottleneck was eliminated to speed up user-facing response times?",
+      "expected_answer": "The cache latency bottleneck. Redis-1 had high latency (45ms) which was a bottleneck for any cache-dependent operations. Migrating to Redis-2 with NVMe storage eliminated this bottleneck by reducing latency to 8ms, resulting in faster dashboard loads (2.1s → 0.8s) and overall API improvements.",
+      "source_documents": [
+        "2026-01-25-infrastructure-update.md",
+        "2026-02-05-performance-monitoring.md"
+      ],
+      "reasoning": "Documents never use the word 'bottleneck'. They describe 'high latency' and 'better hardware'. Must map 'bottleneck' to 'high latency' and 'eliminated' to 'migrated'.",
+      "difficulty": 3,
+      "why_hard": "Question uses synonym ('bottleneck') not present in documents. Requires semantic understanding."
+    }
+  ],
+  "statistics": {
+    "total_questions": 18,
+    "by_difficulty": {
+      "2": 1,
+      "3": 6,
+      "4": 7,
+      "5": 4
+    },
+    "by_category": {
+      "disambiguation": 2,
+      "inference": 2,
+      "temporal_reasoning": 2,
+      "causal_reasoning": 2,
+      "negation": 2,
+      "comparison": 2,
+      "calculation": 2,
+      "synthesis": 1,
+      "contradiction": 1,
+      "multi_hop": 1,
+      "paraphrase": 1
+    }
+  },
+  "expected_multi_query_performance": {
+    "estimated_f1": "20-30%",
+    "reason": "multi_query will find documents with keyword matches but cannot perform the reasoning required to answer these questions. High false positive rate due to ambiguous keywords."
+  }
+}

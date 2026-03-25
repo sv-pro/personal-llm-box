@@ -1,0 +1,220 @@
+{
+  "version": "1.0",
+  "description": "Evaluation dataset for testing retrieval and investigation capabilities",
+  "questions": [
+    {
+      "id": "trivial-1",
+      "type": "trivial",
+      "category": "direct_lookup",
+      "question": "What port does the API Gateway run on?",
+      "expected_answer": "8000",
+      "source_documents": ["2026-01-15-architecture-overview.md"],
+      "reasoning": "Direct lookup - answer appears explicitly in a single document",
+      "difficulty": 1
+    },
+    {
+      "id": "trivial-2",
+      "type": "trivial",
+      "category": "direct_lookup",
+      "question": "What database does the authentication service use?",
+      "expected_answer": "PostgreSQL users table",
+      "source_documents": ["2026-01-15-architecture-overview.md"],
+      "reasoning": "Direct lookup - answer appears explicitly in a single document",
+      "difficulty": 1
+    },
+    {
+      "id": "trivial-3",
+      "type": "trivial",
+      "category": "direct_lookup",
+      "question": "Who performed the Redis migration?",
+      "expected_answer": "Taylor",
+      "source_documents": ["2026-01-25-infrastructure-update.md"],
+      "reasoning": "Direct lookup - answer appears explicitly in a single document",
+      "difficulty": 1
+    },
+    {
+      "id": "trivial-4",
+      "type": "trivial",
+      "category": "direct_lookup",
+      "question": "What is the maximum file size supported for upload?",
+      "expected_answer": "100MB",
+      "source_documents": ["2026-02-01-api-documentation.md"],
+      "reasoning": "Direct lookup - answer appears explicitly in a single document",
+      "difficulty": 1
+    },
+    {
+      "id": "trivial-5",
+      "type": "trivial",
+      "category": "direct_lookup",
+      "question": "What technology stack does the system use?",
+      "expected_answer": "Python 3.11, FastAPI framework, Redis for caching, PostgreSQL for persistence",
+      "source_documents": ["2026-01-15-architecture-overview.md"],
+      "reasoning": "Direct lookup - answer appears as a list in a single document",
+      "difficulty": 1
+    },
+    {
+      "id": "non-trivial-1",
+      "type": "non-trivial",
+      "category": "multi_hop_reasoning",
+      "question": "What was the root cause of the memory leak in the authentication service and how was it fixed?",
+      "expected_answer": "The root cause was that the TokenCache class in auth_service/token_manager.py was not cleaning up expired tokens - the renew_token() method added new tokens to the cache dictionary but never removed old ones, causing unbounded memory growth. It was fixed by implementing an LRU cache with max size of 10,000 entries and adding a background task that runs every 5 minutes to remove expired tokens.",
+      "source_documents": [
+        "2026-01-15-architecture-overview.md",
+        "2026-01-18-sprint-planning-notes.md",
+        "2026-01-22-auth-memory-leak-investigation.md"
+      ],
+      "reasoning": "Multi-hop: (1) Architecture doc mentions the memory leak exists, (2) Sprint planning discusses the issue and assigns it, (3) Investigation doc reveals root cause and solution",
+      "difficulty": 3,
+      "required_connections": [
+        "Identify that memory leak was mentioned in architecture overview",
+        "Find sprint planning discussion assigning investigation to Alex",
+        "Locate detailed investigation findings with root cause",
+        "Synthesize the technical details of the fix"
+      ]
+    },
+    {
+      "id": "non-trivial-2",
+      "type": "non-trivial",
+      "category": "multi_hop_reasoning",
+      "question": "Why were file uploads timing out and what was the complete solution implemented?",
+      "expected_answer": "File uploads larger than 50MB were timing out because the data processing service had a hardcoded timeout of 60 seconds. Given the processing rates (1.2 seconds per MB for CSV to JSON), a 50MB file takes approximately 60 seconds, hitting the timeout limit exactly. The solution was to increase the timeout configuration to 300 seconds (5 minutes) in the data_processing/config.yaml file for file_upload, processing, and api_response operations.",
+      "source_documents": [
+        "2026-01-18-sprint-planning-notes.md",
+        "2026-01-28-timeout-configuration.md"
+      ],
+      "reasoning": "Multi-hop: (1) Sprint planning mentions the problem (Jordan reported 50MB timeouts), (2) Timeout configuration doc explains the investigation, processing rates, and solution",
+      "difficulty": 3,
+      "required_connections": [
+        "Identify timeout issue mentioned in sprint planning",
+        "Find decision to increase timeout to 300 seconds",
+        "Locate detailed investigation with processing rates",
+        "Connect the math: 50MB * 1.2s/MB ≈ 60s timeout limit",
+        "Synthesize the complete solution"
+      ]
+    },
+    {
+      "id": "non-trivial-3",
+      "type": "non-trivial",
+      "category": "multi_hop_reasoning",
+      "question": "What is the current Redis endpoint and why was it migrated?",
+      "expected_answer": "The current Redis endpoint is redis-2.internal.local. It was migrated from redis-1.internal.local because redis-1 was experiencing high latency (avg 45ms) while redis-2 has better hardware (NVMe SSD vs SATA SSD) and shows average latency of only 8ms in testing. This resulted in an 80% reduction in cache latency and improved dashboard load times from 2.1s to 0.8s.",
+      "source_documents": [
+        "2026-01-18-sprint-planning-notes.md",
+        "2026-01-25-infrastructure-update.md"
+      ],
+      "reasoning": "Multi-hop: (1) Sprint planning mentions redis-1.internal.local as current and potential migration to redis-2, (2) Infrastructure update doc details the completed migration with performance reasons",
+      "difficulty": 2,
+      "required_connections": [
+        "Find mention of redis-1 in sprint planning",
+        "Locate migration completion in infrastructure update",
+        "Extract performance metrics and hardware differences",
+        "Synthesize the business justification"
+      ]
+    },
+    {
+      "id": "non-trivial-4",
+      "type": "non-trivial",
+      "category": "calculation_reasoning",
+      "question": "If a user uploads a 100MB CSV file for JSON conversion, will it timeout? Show the calculation.",
+      "expected_answer": "No, it will not timeout. The data processing service has a timeout of 300 seconds (5 minutes). CSV to JSON conversion takes approximately 1.2 seconds per MB. Therefore, a 100MB CSV file would take approximately 100 * 1.2 = 120 seconds to process, which is well under the 300-second timeout limit. Testing confirmed a 100MB CSV file completed in 125 seconds.",
+      "source_documents": [
+        "2026-01-28-timeout-configuration.md"
+      ],
+      "reasoning": "Requires extracting multiple pieces of information from one document (timeout value, processing rate) and performing a calculation to answer",
+      "difficulty": 2,
+      "required_connections": [
+        "Extract timeout value (300 seconds)",
+        "Extract CSV to JSON processing rate (1.2s per MB)",
+        "Perform calculation: 100MB * 1.2s/MB = 120s",
+        "Compare result to timeout limit",
+        "Note testing evidence"
+      ]
+    },
+    {
+      "id": "non-trivial-5",
+      "type": "non-trivial",
+      "category": "synthesis",
+      "question": "What were all the tasks completed in the January sprint, and who was responsible for each?",
+      "expected_answer": "The January sprint had 4 main tasks: (1) Fix memory leak - assigned to Alex, completed on 2026-01-22 by implementing LRU cache and background cleanup task; (2) Update timeout configuration - assigned to Taylor, completed on 2026-01-28 by increasing timeout to 300 seconds; (3) Implement lazy loading - assigned to Jordan (status not documented in available sources); (4) Complete API documentation - assigned to Sarah, completed on 2026-02-01. Additionally, Taylor completed the Redis migration from redis-1 to redis-2 on 2026-01-25.",
+      "source_documents": [
+        "2026-01-18-sprint-planning-notes.md",
+        "2026-01-22-auth-memory-leak-investigation.md",
+        "2026-01-25-infrastructure-update.md",
+        "2026-01-28-timeout-configuration.md",
+        "2026-02-01-api-documentation.md"
+      ],
+      "reasoning": "Synthesis across 5 documents: (1) Sprint planning lists goals and assignments, (2-5) Individual docs show completion of each task",
+      "difficulty": 4,
+      "required_connections": [
+        "Extract sprint goals from planning notes",
+        "Find evidence of memory leak fix completion",
+        "Find evidence of timeout update completion",
+        "Find evidence of API documentation completion",
+        "Identify additional work (Redis migration) completed during sprint",
+        "Synthesize timeline and responsibilities"
+      ]
+    },
+    {
+      "id": "non-trivial-6",
+      "type": "non-trivial",
+      "category": "temporal_reasoning",
+      "question": "In what order were the sprint tasks completed, and how long did the memory leak fix take?",
+      "expected_answer": "Sprint planning occurred on 2026-01-18. The memory leak investigation was completed first on 2026-01-22 (4 days after planning). The Redis migration followed on 2026-01-25 (7 days after planning). The timeout configuration was updated on 2026-01-28 (10 days after planning). Finally, API documentation was completed on 2026-02-01 (14 days after planning). The memory leak fix took 4 days from assignment to resolution.",
+      "source_documents": [
+        "2026-01-18-sprint-planning-notes.md",
+        "2026-01-22-auth-memory-leak-investigation.md",
+        "2026-01-25-infrastructure-update.md",
+        "2026-01-28-timeout-configuration.md",
+        "2026-02-01-api-documentation.md"
+      ],
+      "reasoning": "Temporal reasoning: requires extracting dates from multiple documents and constructing a timeline",
+      "difficulty": 3,
+      "required_connections": [
+        "Extract created_at dates from all documents",
+        "Order events chronologically",
+        "Calculate duration for memory leak fix",
+        "Synthesize timeline narrative"
+      ]
+    },
+    {
+      "id": "non-trivial-7",
+      "type": "non-trivial",
+      "category": "investigative",
+      "question": "A user reports that token renewals are slow. Based on the system changes, what might have improved performance and by how much?",
+      "expected_answer": "Token renewal performance was likely improved by the Redis migration from redis-1.internal.local to redis-2.internal.local on 2026-01-25. The migration reduced cache latency by 80% (from avg 45ms to 8ms). Since the authentication service uses Redis for caching (as documented in the architecture), and tokens are managed through the TokenCache class, token renewals would benefit from this improved cache performance. The overall system showed dashboard load time improvements from 2.1s to 0.8s after the migration.",
+      "source_documents": [
+        "2026-01-15-architecture-overview.md",
+        "2026-01-22-auth-memory-leak-investigation.md",
+        "2026-01-25-infrastructure-update.md"
+      ],
+      "reasoning": "Investigative: requires connecting architecture (Redis usage), token management implementation, and infrastructure changes to infer performance impact",
+      "difficulty": 4,
+      "required_connections": [
+        "Identify that auth service uses Redis (architecture doc)",
+        "Identify that TokenCache manages token renewals (investigation doc)",
+        "Find Redis migration details and performance metrics",
+        "Infer that token renewal performance would improve from cache latency reduction",
+        "Quantify the improvement based on available metrics"
+      ]
+    }
+  ],
+  "statistics": {
+    "total_questions": 12,
+    "trivial_questions": 5,
+    "non_trivial_questions": 7,
+    "difficulty_distribution": {
+      "1": 5,
+      "2": 2,
+      "3": 3,
+      "4": 2
+    },
+    "category_distribution": {
+      "direct_lookup": 5,
+      "multi_hop_reasoning": 4,
+      "calculation_reasoning": 1,
+      "synthesis": 1,
+      "temporal_reasoning": 1,
+      "investigative": 1
+    }
+  }
+}

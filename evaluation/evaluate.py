@@ -157,6 +157,100 @@ class MultiQueryStrategy:
         )
 
 
+class VectorSearchStrategy:
+    """Semantic search using sentence embeddings"""
+
+    def __init__(self):
+        try:
+            from sentence_transformers import SentenceTransformer
+            import numpy as np
+            self.model = SentenceTransformer('all-MiniLM-L6-v2')
+            self.np = np
+            self._embeddings_cache = {}
+            self._documents_cache = {}
+        except ImportError:
+            raise ImportError("Install sentence-transformers: pip install sentence-transformers")
+
+    @property
+    def name(self) -> str:
+        return "vector_search"
+
+    def _get_document_embedding(self, filepath: Path) -> 'np.ndarray':
+        """Get or compute embedding for a document"""
+        cache_key = str(filepath)
+
+        if cache_key in self._embeddings_cache:
+            return self._embeddings_cache[cache_key]
+
+        try:
+            text = filepath.read_text(encoding="utf-8")
+            # Remove frontmatter for better embedding
+            if text.startswith('---'):
+                parts = text.split('---', 2)
+                if len(parts) >= 3:
+                    text = parts[2].strip()
+
+            embedding = self.model.encode(text, convert_to_numpy=True)
+            self._embeddings_cache[cache_key] = embedding
+            self._documents_cache[cache_key] = text
+            return embedding
+        except Exception:
+            return self.np.zeros(384)  # all-MiniLM-L6-v2 has 384 dimensions
+
+    def _cosine_similarity(self, vec1: 'np.ndarray', vec2: 'np.ndarray') -> float:
+        """Calculate cosine similarity between two vectors"""
+        dot_product = self.np.dot(vec1, vec2)
+        norm1 = self.np.linalg.norm(vec1)
+        norm2 = self.np.linalg.norm(vec2)
+
+        if norm1 == 0 or norm2 == 0:
+            return 0.0
+
+        return float(dot_product / (norm1 * norm2))
+
+    def retrieve(self, query: str, knowledge_dir: Path) -> RetrievalResult:
+        start_time = time.time()
+
+        # Encode query
+        query_embedding = self.model.encode(query, convert_to_numpy=True)
+
+        # Calculate similarity with all documents
+        similarities = []
+        for md_file in knowledge_dir.glob("*.md"):
+            doc_embedding = self._get_document_embedding(md_file)
+            similarity = self._cosine_similarity(query_embedding, doc_embedding)
+            similarities.append((md_file.name, similarity))
+
+        # Sort by similarity (highest first)
+        similarities.sort(key=lambda x: x[1], reverse=True)
+
+        # Filter documents with similarity > threshold
+        threshold = 0.2  # Adjust based on testing
+        filtered_docs = [(doc, sim) for doc, sim in similarities if sim > threshold]
+
+        documents = [doc for doc, sim in filtered_docs]
+
+        # Generate snippets (first 200 chars of document)
+        snippets = []
+        for doc_name in documents:
+            cache_key = str(knowledge_dir / doc_name)
+            if cache_key in self._documents_cache:
+                text = self._documents_cache[cache_key]
+                snippet = text[:200].replace('\n', ' ') + '...'
+                snippets.append(snippet)
+            else:
+                snippets.append('')
+
+        query_time_ms = (time.time() - start_time) * 1000
+
+        return RetrievalResult(
+            documents=documents,
+            snippets=snippets,
+            query_time_ms=query_time_ms,
+            strategy=self.name
+        )
+
+
 def calculate_metrics(expected_sources: List[str], retrieved_sources: List[str]) -> Dict[str, float]:
     """Calculate precision, recall, and F1 score"""
     expected_set = set(expected_sources)
@@ -275,7 +369,7 @@ def print_summary(evaluation: Dict[str, Any]):
 
 def main():
     parser = argparse.ArgumentParser(description='Evaluate retrieval strategies')
-    parser.add_argument('--strategy', choices=['simple_grep', 'multi_query', 'all'],
+    parser.add_argument('--strategy', choices=['simple_grep', 'multi_query', 'vector_search', 'all'],
                        default='simple_grep', help='Retrieval strategy to test')
     parser.add_argument('--output', type=str, help='Output JSON file for detailed results')
     parser.add_argument('--knowledge-dir', type=str, default='evaluation/knowledge',
@@ -296,6 +390,16 @@ def main():
         'simple_grep': SimpleGrepStrategy(),
         'multi_query': MultiQueryStrategy()
     }
+
+    # Add vector search if available
+    try:
+        strategies['vector_search'] = VectorSearchStrategy()
+    except ImportError as e:
+        if args.strategy == 'vector_search' or args.strategy == 'all':
+            print(f"Warning: Vector search not available: {e}")
+            print("Install with: pip install sentence-transformers")
+            if args.strategy == 'vector_search':
+                return
 
     # Select strategies to run
     if args.strategy == 'all':

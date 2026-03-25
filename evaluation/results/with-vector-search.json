@@ -1,0 +1,929 @@
+{
+  "timestamp": "2026-03-26 01:18:48",
+  "evaluations": [
+    {
+      "strategy": "simple_grep",
+      "total_questions": 12,
+      "results": [
+        {
+          "question_id": "trivial-1",
+          "question_type": "trivial",
+          "question": "What port does the API Gateway run on?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md"
+          ],
+          "retrieved_sources": [],
+          "expected_answer": "8000",
+          "strategy": "simple_grep",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 0.9262561798095703,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "trivial-2",
+          "question_type": "trivial",
+          "question": "What database does the authentication service use?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md"
+          ],
+          "retrieved_sources": [],
+          "expected_answer": "PostgreSQL users table",
+          "strategy": "simple_grep",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 0.3800392150878906,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "trivial-3",
+          "question_type": "trivial",
+          "question": "Who performed the Redis migration?",
+          "expected_sources": [
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [],
+          "expected_answer": "Taylor",
+          "strategy": "simple_grep",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 0.33473968505859375,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "trivial-4",
+          "question_type": "trivial",
+          "question": "What is the maximum file size supported for upload?",
+          "expected_sources": [
+            "2026-02-01-api-documentation.md"
+          ],
+          "retrieved_sources": [],
+          "expected_answer": "100MB",
+          "strategy": "simple_grep",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 0.3261566162109375,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "trivial-5",
+          "question_type": "trivial",
+          "question": "What technology stack does the system use?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md"
+          ],
+          "retrieved_sources": [],
+          "expected_answer": "Python 3.11, FastAPI framework, Redis for caching, PostgreSQL for persistence",
+          "strategy": "simple_grep",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 0.33926963806152344,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "non-trivial-1",
+          "question_type": "non-trivial",
+          "question": "What was the root cause of the memory leak in the authentication service and how was it fixed?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "retrieved_sources": [],
+          "expected_answer": "The root cause was that the TokenCache class in auth_service/token_manager.py was not cleaning up expired tokens - the renew_token() method added new tokens to the cache dictionary but never removed old ones, causing unbounded memory growth. It was fixed by implementing an LRU cache with max size of 10,000 entries and adding a background task that runs every 5 minutes to remove expired tokens.",
+          "strategy": "simple_grep",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 0.3247261047363281,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "non-trivial-2",
+          "question_type": "non-trivial",
+          "question": "Why were file uploads timing out and what was the complete solution implemented?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "retrieved_sources": [],
+          "expected_answer": "File uploads larger than 50MB were timing out because the data processing service had a hardcoded timeout of 60 seconds. Given the processing rates (1.2 seconds per MB for CSV to JSON), a 50MB file takes approximately 60 seconds, hitting the timeout limit exactly. The solution was to increase the timeout configuration to 300 seconds (5 minutes) in the data_processing/config.yaml file for file_upload, processing, and api_response operations.",
+          "strategy": "simple_grep",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 0.3218650817871094,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "non-trivial-3",
+          "question_type": "non-trivial",
+          "question": "What is the current Redis endpoint and why was it migrated?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [],
+          "expected_answer": "The current Redis endpoint is redis-2.internal.local. It was migrated from redis-1.internal.local because redis-1 was experiencing high latency (avg 45ms) while redis-2 has better hardware (NVMe SSD vs SATA SSD) and shows average latency of only 8ms in testing. This resulted in an 80% reduction in cache latency and improved dashboard load times from 2.1s to 0.8s.",
+          "strategy": "simple_grep",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 0.33283233642578125,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "non-trivial-4",
+          "question_type": "non-trivial",
+          "question": "If a user uploads a 100MB CSV file for JSON conversion, will it timeout? Show the calculation.",
+          "expected_sources": [
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "retrieved_sources": [],
+          "expected_answer": "No, it will not timeout. The data processing service has a timeout of 300 seconds (5 minutes). CSV to JSON conversion takes approximately 1.2 seconds per MB. Therefore, a 100MB CSV file would take approximately 100 * 1.2 = 120 seconds to process, which is well under the 300-second timeout limit. Testing confirmed a 100MB CSV file completed in 125 seconds.",
+          "strategy": "simple_grep",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 0.3216266632080078,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "non-trivial-5",
+          "question_type": "non-trivial",
+          "question": "What were all the tasks completed in the January sprint, and who was responsible for each?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "retrieved_sources": [],
+          "expected_answer": "The January sprint had 4 main tasks: (1) Fix memory leak - assigned to Alex, completed on 2026-01-22 by implementing LRU cache and background cleanup task; (2) Update timeout configuration - assigned to Taylor, completed on 2026-01-28 by increasing timeout to 300 seconds; (3) Implement lazy loading - assigned to Jordan (status not documented in available sources); (4) Complete API documentation - assigned to Sarah, completed on 2026-02-01. Additionally, Taylor completed the Redis migration from redis-1 to redis-2 on 2026-01-25.",
+          "strategy": "simple_grep",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 0.3540515899658203,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "non-trivial-6",
+          "question_type": "non-trivial",
+          "question": "In what order were the sprint tasks completed, and how long did the memory leak fix take?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "retrieved_sources": [],
+          "expected_answer": "Sprint planning occurred on 2026-01-18. The memory leak investigation was completed first on 2026-01-22 (4 days after planning). The Redis migration followed on 2026-01-25 (7 days after planning). The timeout configuration was updated on 2026-01-28 (10 days after planning). Finally, API documentation was completed on 2026-02-01 (14 days after planning). The memory leak fix took 4 days from assignment to resolution.",
+          "strategy": "simple_grep",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 0.33211708068847656,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "non-trivial-7",
+          "question_type": "non-trivial",
+          "question": "A user reports that token renewals are slow. Based on the system changes, what might have improved performance and by how much?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [],
+          "expected_answer": "Token renewal performance was likely improved by the Redis migration from redis-1.internal.local to redis-2.internal.local on 2026-01-25. The migration reduced cache latency by 80% (from avg 45ms to 8ms). Since the authentication service uses Redis for caching (as documented in the architecture), and tokens are managed through the TokenCache class, token renewals would benefit from this improved cache performance. The overall system showed dashboard load time improvements from 2.1s to 0.8s after the migration.",
+          "strategy": "simple_grep",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 0.3235340118408203,
+          "found_all_sources": false,
+          "found_any_sources": false
+        }
+      ],
+      "aggregate": {
+        "overall": {
+          "avg_precision": 0.0,
+          "avg_recall": 0.0,
+          "avg_f1": 0.0,
+          "avg_source_coverage": 0.0,
+          "avg_query_time_ms": 0.3847678502400716,
+          "found_all_count": 0,
+          "found_any_count": 0,
+          "total": 12
+        },
+        "trivial": {
+          "avg_precision": 0.0,
+          "avg_recall": 0.0,
+          "avg_f1": 0.0,
+          "avg_source_coverage": 0.0,
+          "avg_query_time_ms": 0.4612922668457031,
+          "found_all_count": 0,
+          "found_any_count": 0,
+          "total": 5
+        },
+        "non_trivial": {
+          "avg_precision": 0.0,
+          "avg_recall": 0.0,
+          "avg_f1": 0.0,
+          "avg_source_coverage": 0.0,
+          "avg_query_time_ms": 0.33010755266462055,
+          "found_all_count": 0,
+          "found_any_count": 0,
+          "total": 7
+        }
+      }
+    },
+    {
+      "strategy": "multi_query",
+      "total_questions": 12,
+      "results": [
+        {
+          "question_id": "trivial-1",
+          "question_type": "trivial",
+          "question": "What port does the API Gateway run on?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "expected_answer": "8000",
+          "strategy": "multi_query",
+          "precision": 0.16666666666666666,
+          "recall": 1.0,
+          "f1_score": 0.2857142857142857,
+          "source_coverage": 1.0,
+          "query_time_ms": 2.419710159301758,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "trivial-2",
+          "question_type": "trivial",
+          "question": "What database does the authentication service use?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-15-architecture-overview.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "expected_answer": "PostgreSQL users table",
+          "strategy": "multi_query",
+          "precision": 0.16666666666666666,
+          "recall": 1.0,
+          "f1_score": 0.2857142857142857,
+          "source_coverage": 1.0,
+          "query_time_ms": 1.912832260131836,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "trivial-3",
+          "question_type": "trivial",
+          "question": "Who performed the Redis migration?",
+          "expected_sources": [
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md"
+          ],
+          "expected_answer": "Taylor",
+          "strategy": "multi_query",
+          "precision": 0.3333333333333333,
+          "recall": 1.0,
+          "f1_score": 0.5,
+          "source_coverage": 1.0,
+          "query_time_ms": 1.0876655578613281,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "trivial-4",
+          "question_type": "trivial",
+          "question": "What is the maximum file size supported for upload?",
+          "expected_sources": [
+            "2026-02-01-api-documentation.md"
+          ],
+          "retrieved_sources": [
+            "2026-02-01-api-documentation.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "expected_answer": "100MB",
+          "strategy": "multi_query",
+          "precision": 0.16666666666666666,
+          "recall": 1.0,
+          "f1_score": 0.2857142857142857,
+          "source_coverage": 1.0,
+          "query_time_ms": 1.8877983093261719,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "trivial-5",
+          "question_type": "trivial",
+          "question": "What technology stack does the system use?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-15-architecture-overview.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "expected_answer": "Python 3.11, FastAPI framework, Redis for caching, PostgreSQL for persistence",
+          "strategy": "multi_query",
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1_score": 0.4,
+          "source_coverage": 1.0,
+          "query_time_ms": 1.756906509399414,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-1",
+          "question_type": "non-trivial",
+          "question": "What was the root cause of the memory leak in the authentication service and how was it fixed?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "expected_answer": "The root cause was that the TokenCache class in auth_service/token_manager.py was not cleaning up expired tokens - the renew_token() method added new tokens to the cache dictionary but never removed old ones, causing unbounded memory growth. It was fixed by implementing an LRU cache with max size of 10,000 entries and adding a background task that runs every 5 minutes to remove expired tokens.",
+          "strategy": "multi_query",
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1_score": 0.6666666666666666,
+          "source_coverage": 1.0,
+          "query_time_ms": 3.4017562866210938,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-2",
+          "question_type": "non-trivial",
+          "question": "Why were file uploads timing out and what was the complete solution implemented?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-15-architecture-overview.md"
+          ],
+          "expected_answer": "File uploads larger than 50MB were timing out because the data processing service had a hardcoded timeout of 60 seconds. Given the processing rates (1.2 seconds per MB for CSV to JSON), a 50MB file takes approximately 60 seconds, hitting the timeout limit exactly. The solution was to increase the timeout configuration to 300 seconds (5 minutes) in the data_processing/config.yaml file for file_upload, processing, and api_response operations.",
+          "strategy": "multi_query",
+          "precision": 0.3333333333333333,
+          "recall": 1.0,
+          "f1_score": 0.5,
+          "source_coverage": 1.0,
+          "query_time_ms": 2.6404857635498047,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-3",
+          "question_type": "non-trivial",
+          "question": "What is the current Redis endpoint and why was it migrated?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "expected_answer": "The current Redis endpoint is redis-2.internal.local. It was migrated from redis-1.internal.local because redis-1 was experiencing high latency (avg 45ms) while redis-2 has better hardware (NVMe SSD vs SATA SSD) and shows average latency of only 8ms in testing. This resulted in an 80% reduction in cache latency and improved dashboard load times from 2.1s to 0.8s.",
+          "strategy": "multi_query",
+          "precision": 0.3333333333333333,
+          "recall": 1.0,
+          "f1_score": 0.5,
+          "source_coverage": 1.0,
+          "query_time_ms": 1.9156932830810547,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-4",
+          "question_type": "non-trivial",
+          "question": "If a user uploads a 100MB CSV file for JSON conversion, will it timeout? Show the calculation.",
+          "expected_sources": [
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "expected_answer": "No, it will not timeout. The data processing service has a timeout of 300 seconds (5 minutes). CSV to JSON conversion takes approximately 1.2 seconds per MB. Therefore, a 100MB CSV file would take approximately 100 * 1.2 = 120 seconds to process, which is well under the 300-second timeout limit. Testing confirmed a 100MB CSV file completed in 125 seconds.",
+          "strategy": "multi_query",
+          "precision": 0.16666666666666666,
+          "recall": 1.0,
+          "f1_score": 0.2857142857142857,
+          "source_coverage": 1.0,
+          "query_time_ms": 4.739522933959961,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-5",
+          "question_type": "non-trivial",
+          "question": "What were all the tasks completed in the January sprint, and who was responsible for each?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "expected_answer": "The January sprint had 4 main tasks: (1) Fix memory leak - assigned to Alex, completed on 2026-01-22 by implementing LRU cache and background cleanup task; (2) Update timeout configuration - assigned to Taylor, completed on 2026-01-28 by increasing timeout to 300 seconds; (3) Implement lazy loading - assigned to Jordan (status not documented in available sources); (4) Complete API documentation - assigned to Sarah, completed on 2026-02-01. Additionally, Taylor completed the Redis migration from redis-1 to redis-2 on 2026-01-25.",
+          "strategy": "multi_query",
+          "precision": 0.8,
+          "recall": 0.8,
+          "f1_score": 0.8000000000000002,
+          "source_coverage": 0.8,
+          "query_time_ms": 2.497434616088867,
+          "found_all_sources": false,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-6",
+          "question_type": "non-trivial",
+          "question": "In what order were the sprint tasks completed, and how long did the memory leak fix take?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "expected_answer": "Sprint planning occurred on 2026-01-18. The memory leak investigation was completed first on 2026-01-22 (4 days after planning). The Redis migration followed on 2026-01-25 (7 days after planning). The timeout configuration was updated on 2026-01-28 (10 days after planning). Finally, API documentation was completed on 2026-02-01 (14 days after planning). The memory leak fix took 4 days from assignment to resolution.",
+          "strategy": "multi_query",
+          "precision": 0.8,
+          "recall": 0.8,
+          "f1_score": 0.8000000000000002,
+          "source_coverage": 0.8,
+          "query_time_ms": 4.071950912475586,
+          "found_all_sources": false,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-7",
+          "question_type": "non-trivial",
+          "question": "A user reports that token renewals are slow. Based on the system changes, what might have improved performance and by how much?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "expected_answer": "Token renewal performance was likely improved by the Redis migration from redis-1.internal.local to redis-2.internal.local on 2026-01-25. The migration reduced cache latency by 80% (from avg 45ms to 8ms). Since the authentication service uses Redis for caching (as documented in the architecture), and tokens are managed through the TokenCache class, token renewals would benefit from this improved cache performance. The overall system showed dashboard load time improvements from 2.1s to 0.8s after the migration.",
+          "strategy": "multi_query",
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1_score": 0.6666666666666666,
+          "source_coverage": 1.0,
+          "query_time_ms": 6.847381591796875,
+          "found_all_sources": true,
+          "found_any_sources": true
+        }
+      ],
+      "aggregate": {
+        "overall": {
+          "avg_precision": 0.3763888888888889,
+          "avg_recall": 0.9666666666666667,
+          "avg_f1": 0.498015873015873,
+          "avg_source_coverage": 0.9666666666666667,
+          "avg_query_time_ms": 2.9315948486328125,
+          "found_all_count": 10,
+          "found_any_count": 12,
+          "total": 12
+        },
+        "trivial": {
+          "avg_precision": 0.21666666666666665,
+          "avg_recall": 1.0,
+          "avg_f1": 0.3514285714285714,
+          "avg_source_coverage": 1.0,
+          "avg_query_time_ms": 1.8129825592041016,
+          "found_all_count": 5,
+          "found_any_count": 5,
+          "total": 5
+        },
+        "non_trivial": {
+          "avg_precision": 0.4904761904761905,
+          "avg_recall": 0.9428571428571428,
+          "avg_f1": 0.6027210884353742,
+          "avg_source_coverage": 0.9428571428571428,
+          "avg_query_time_ms": 3.7306036267961775,
+          "found_all_count": 5,
+          "found_any_count": 7,
+          "total": 7
+        }
+      }
+    },
+    {
+      "strategy": "vector_search",
+      "total_questions": 12,
+      "results": [
+        {
+          "question_id": "trivial-1",
+          "question_type": "trivial",
+          "question": "What port does the API Gateway run on?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md"
+          ],
+          "retrieved_sources": [
+            "2026-02-01-api-documentation.md"
+          ],
+          "expected_answer": "8000",
+          "strategy": "vector_search",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 357.4082851409912,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "trivial-2",
+          "question_type": "trivial",
+          "question": "What database does the authentication service use?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-15-architecture-overview.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "expected_answer": "PostgreSQL users table",
+          "strategy": "vector_search",
+          "precision": 0.3333333333333333,
+          "recall": 1.0,
+          "f1_score": 0.5,
+          "source_coverage": 1.0,
+          "query_time_ms": 9.402990341186523,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "trivial-3",
+          "question_type": "trivial",
+          "question": "Who performed the Redis migration?",
+          "expected_sources": [
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "expected_answer": "Taylor",
+          "strategy": "vector_search",
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "source_coverage": 1.0,
+          "query_time_ms": 8.835077285766602,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "trivial-4",
+          "question_type": "trivial",
+          "question": "What is the maximum file size supported for upload?",
+          "expected_sources": [
+            "2026-02-01-api-documentation.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-18-sprint-planning-notes.md"
+          ],
+          "expected_answer": "100MB",
+          "strategy": "vector_search",
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0,
+          "source_coverage": 0.0,
+          "query_time_ms": 10.741710662841797,
+          "found_all_sources": false,
+          "found_any_sources": false
+        },
+        {
+          "question_id": "trivial-5",
+          "question_type": "trivial",
+          "question": "What technology stack does the system use?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-15-architecture-overview.md"
+          ],
+          "expected_answer": "Python 3.11, FastAPI framework, Redis for caching, PostgreSQL for persistence",
+          "strategy": "vector_search",
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "source_coverage": 1.0,
+          "query_time_ms": 9.932279586791992,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-1",
+          "question_type": "non-trivial",
+          "question": "What was the root cause of the memory leak in the authentication service and how was it fixed?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-15-architecture-overview.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "expected_answer": "The root cause was that the TokenCache class in auth_service/token_manager.py was not cleaning up expired tokens - the renew_token() method added new tokens to the cache dictionary but never removed old ones, causing unbounded memory growth. It was fixed by implementing an LRU cache with max size of 10,000 entries and adding a background task that runs every 5 minutes to remove expired tokens.",
+          "strategy": "vector_search",
+          "precision": 0.75,
+          "recall": 1.0,
+          "f1_score": 0.8571428571428571,
+          "source_coverage": 1.0,
+          "query_time_ms": 9.671688079833984,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-2",
+          "question_type": "non-trivial",
+          "question": "Why were file uploads timing out and what was the complete solution implemented?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md"
+          ],
+          "expected_answer": "File uploads larger than 50MB were timing out because the data processing service had a hardcoded timeout of 60 seconds. Given the processing rates (1.2 seconds per MB for CSV to JSON), a 50MB file takes approximately 60 seconds, hitting the timeout limit exactly. The solution was to increase the timeout configuration to 300 seconds (5 minutes) in the data_processing/config.yaml file for file_upload, processing, and api_response operations.",
+          "strategy": "vector_search",
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "f1_score": 0.8,
+          "source_coverage": 1.0,
+          "query_time_ms": 9.288549423217773,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-3",
+          "question_type": "non-trivial",
+          "question": "What is the current Redis endpoint and why was it migrated?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-15-architecture-overview.md"
+          ],
+          "expected_answer": "The current Redis endpoint is redis-2.internal.local. It was migrated from redis-1.internal.local because redis-1 was experiencing high latency (avg 45ms) while redis-2 has better hardware (NVMe SSD vs SATA SSD) and shows average latency of only 8ms in testing. This resulted in an 80% reduction in cache latency and improved dashboard load times from 2.1s to 0.8s.",
+          "strategy": "vector_search",
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1_score": 0.5,
+          "source_coverage": 0.5,
+          "query_time_ms": 8.788824081420898,
+          "found_all_sources": false,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-4",
+          "question_type": "non-trivial",
+          "question": "If a user uploads a 100MB CSV file for JSON conversion, will it timeout? Show the calculation.",
+          "expected_sources": [
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-28-timeout-configuration.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md"
+          ],
+          "expected_answer": "No, it will not timeout. The data processing service has a timeout of 300 seconds (5 minutes). CSV to JSON conversion takes approximately 1.2 seconds per MB. Therefore, a 100MB CSV file would take approximately 100 * 1.2 = 120 seconds to process, which is well under the 300-second timeout limit. Testing confirmed a 100MB CSV file completed in 125 seconds.",
+          "strategy": "vector_search",
+          "precision": 0.3333333333333333,
+          "recall": 1.0,
+          "f1_score": 0.5,
+          "source_coverage": 1.0,
+          "query_time_ms": 10.772466659545898,
+          "found_all_sources": true,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-5",
+          "question_type": "non-trivial",
+          "question": "What were all the tasks completed in the January sprint, and who was responsible for each?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md"
+          ],
+          "expected_answer": "The January sprint had 4 main tasks: (1) Fix memory leak - assigned to Alex, completed on 2026-01-22 by implementing LRU cache and background cleanup task; (2) Update timeout configuration - assigned to Taylor, completed on 2026-01-28 by increasing timeout to 300 seconds; (3) Implement lazy loading - assigned to Jordan (status not documented in available sources); (4) Complete API documentation - assigned to Sarah, completed on 2026-02-01. Additionally, Taylor completed the Redis migration from redis-1 to redis-2 on 2026-01-25.",
+          "strategy": "vector_search",
+          "precision": 0.5,
+          "recall": 0.2,
+          "f1_score": 0.28571428571428575,
+          "source_coverage": 0.2,
+          "query_time_ms": 8.71729850769043,
+          "found_all_sources": false,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-6",
+          "question_type": "non-trivial",
+          "question": "In what order were the sprint tasks completed, and how long did the memory leak fix take?",
+          "expected_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-01-28-timeout-configuration.md",
+            "2026-02-01-api-documentation.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-22-auth-memory-leak-investigation.md"
+          ],
+          "expected_answer": "Sprint planning occurred on 2026-01-18. The memory leak investigation was completed first on 2026-01-22 (4 days after planning). The Redis migration followed on 2026-01-25 (7 days after planning). The timeout configuration was updated on 2026-01-28 (10 days after planning). Finally, API documentation was completed on 2026-02-01 (14 days after planning). The memory leak fix took 4 days from assignment to resolution.",
+          "strategy": "vector_search",
+          "precision": 0.6666666666666666,
+          "recall": 0.4,
+          "f1_score": 0.5,
+          "source_coverage": 0.4,
+          "query_time_ms": 9.282588958740234,
+          "found_all_sources": false,
+          "found_any_sources": true
+        },
+        {
+          "question_id": "non-trivial-7",
+          "question_type": "non-trivial",
+          "question": "A user reports that token renewals are slow. Based on the system changes, what might have improved performance and by how much?",
+          "expected_sources": [
+            "2026-01-15-architecture-overview.md",
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-25-infrastructure-update.md"
+          ],
+          "retrieved_sources": [
+            "2026-01-22-auth-memory-leak-investigation.md",
+            "2026-01-15-architecture-overview.md",
+            "2026-01-18-sprint-planning-notes.md",
+            "2026-01-25-infrastructure-update.md",
+            "2026-02-01-api-documentation.md",
+            "2026-01-28-timeout-configuration.md"
+          ],
+          "expected_answer": "Token renewal performance was likely improved by the Redis migration from redis-1.internal.local to redis-2.internal.local on 2026-01-25. The migration reduced cache latency by 80% (from avg 45ms to 8ms). Since the authentication service uses Redis for caching (as documented in the architecture), and tokens are managed through the TokenCache class, token renewals would benefit from this improved cache performance. The overall system showed dashboard load time improvements from 2.1s to 0.8s after the migration.",
+          "strategy": "vector_search",
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1_score": 0.6666666666666666,
+          "source_coverage": 1.0,
+          "query_time_ms": 8.70656967163086,
+          "found_all_sources": true,
+          "found_any_sources": true
+        }
+      ],
+      "aggregate": {
+        "overall": {
+          "avg_precision": 0.5208333333333334,
+          "avg_recall": 0.6749999999999999,
+          "avg_f1": 0.5507936507936507,
+          "avg_source_coverage": 0.6749999999999999,
+          "avg_query_time_ms": 38.46236069997152,
+          "found_all_count": 7,
+          "found_any_count": 10,
+          "total": 12
+        },
+        "trivial": {
+          "avg_precision": 0.4666666666666667,
+          "avg_recall": 0.6,
+          "avg_f1": 0.5,
+          "avg_source_coverage": 0.6,
+          "avg_query_time_ms": 79.26406860351562,
+          "found_all_count": 3,
+          "found_any_count": 3,
+          "total": 5
+        },
+        "non_trivial": {
+          "avg_precision": 0.5595238095238095,
+          "avg_recall": 0.7285714285714285,
+          "avg_f1": 0.5870748299319727,
+          "avg_source_coverage": 0.7285714285714285,
+          "avg_query_time_ms": 9.31828362601144,
+          "found_all_count": 4,
+          "found_any_count": 7,
+          "total": 7
+        }
+      }
+    }
+  ]
+}

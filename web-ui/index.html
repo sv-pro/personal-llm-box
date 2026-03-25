@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal AI Box - Knowledge Base</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        header p {
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            margin-bottom: -2px;
+        }
+
+        .tab:hover {
+            color: var(--text);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+
+        .tag-input {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .tag {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        button.btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button.btn:hover {
+            background: var(--primary-hover);
+        }
+
+        button.btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button.btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        button.btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box input {
+            padding-left: 2.5rem;
+        }
+
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.25rem;
+        }
+
+        .results {
+            margin-top: 1.5rem;
+        }
+
+        .result-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            transition: border-color 0.2s;
+        }
+
+        .result-item:hover {
+            border-color: var(--primary);
+        }
+
+        .result-filename {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-snippet {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .analysis-result {
+            margin-top: 1.5rem;
+        }
+
+        .analysis-result h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .analysis-result ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .analysis-result li {
+            margin-bottom: 0.5rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg {
+            width: 4rem;
+            height: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+        }
+
+        .api-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            margin-left: 1rem;
+        }
+
+        .api-status.online {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .api-status.offline {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .api-status-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .catalogue-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .catalogue-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .catalogue-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.75rem;
+        }
+
+        .catalogue-item-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        .catalogue-item-filename {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        .catalogue-item-date {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .catalogue-item-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .catalogue-item-tag {
+            background: var(--primary);
+            color: white;
+            padding: 0.125rem 0.625rem;
+            border-radius: 0.875rem;
+            font-size: 0.75rem;
+        }
+
+        .catalogue-item-preview {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+
+        .catalogue-item-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .stat-mini {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        .stat-mini-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-mini-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.125rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <h1>📚 Personal AI Box</h1>
+                    <p>Your local knowledge base with AI-powered insights</p>
+                </div>
+                <div id="apiStatus" class="api-status offline">
+                    <span class="api-status-dot"></span>
+                    <span>Checking API...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" data-tab="catalogue">📚 Catalogue</button>
+            <button class="tab" data-tab="search">🔍 Search</button>
+            <button class="tab" data-tab="save">💾 Save Artifact</button>
+            <button class="tab" data-tab="ingest">📥 Ingest Text</button>
+            <button class="tab" data-tab="digest">🤖 AI Digest</button>
+        </div>
+
+        <!-- Catalogue Tab -->
+        <div class="tab-content active" id="catalogue">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 style="margin: 0;">Your Knowledge Base</h2>
+                    <button class="btn" onclick="loadCatalogue()" style="padding: 0.5rem 1rem;">
+                        <span id="catalogueRefreshBtn">🔄 Refresh</span>
+                    </button>
+                </div>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                    Browse all your saved knowledge. Click on any item to view details.
+                </p>
+
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <select id="sortBy" onchange="loadCatalogue()" style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.375rem;">
+                        <option value="date-desc">Newest First</option>
+                        <option value="date-asc">Oldest First</option>
+                        <option value="title">Title A-Z</option>
+                    </select>
+                    <select id="filterTag" onchange="loadCatalogue()" style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.375rem;">
+                        <option value="">All Tags</option>
+                    </select>
+                </div>
+
+                <div id="catalogueStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;"></div>
+            </div>
+
+            <div id="catalogueItems"></div>
+        </div>
+
+        <!-- Search Tab -->
+        <div class="tab-content" id="search">
+            <div class="card">
+                <h2>Search Knowledge Base</h2>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search for anything...">
+                </div>
+                <button class="btn" onclick="search()">Search</button>
+            </div>
+
+            <div id="searchResults"></div>
+        </div>
+
+        <!-- Save Artifact Tab -->
+        <div class="tab-content" id="save">
+            <div class="card">
+                <h2>Save Artifact</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                    Create a structured document with title, content, and tags
+                </p>
+
+                <form onsubmit="saveArtifact(event)">
+                    <div class="form-group">
+                        <label for="artifactTitle">Title</label>
+                        <input type="text" id="artifactTitle" required placeholder="Meeting Notes - Product Strategy">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="artifactContent">Content</label>
+                        <textarea id="artifactContent" required rows="10" placeholder="Your content here...
+
+Supports markdown formatting"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tags</label>
+                        <div id="tagList" class="tag-input">
+                            <input type="text" id="tagInput" placeholder="Add a tag and press Enter"
+                                   style="flex: 1; min-width: 200px;"
+                                   onkeypress="addTag(event)">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn">💾 Save Artifact</button>
+                </form>
+
+                <div id="saveResult"></div>
+            </div>
+        </div>
+
+        <!-- Ingest Tab -->
+        <div class="tab-content" id="ingest">
+            <div class="card">
+                <h2>Ingest Text</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                    Import long-form text. Will be automatically chunked into paragraphs.
+                </p>
+
+                <form onsubmit="ingestText(event)">
+                    <div class="form-group">
+                        <label for="ingestText">Text Content</label>
+                        <textarea id="ingestText" required rows="15"
+                                  placeholder="Paste your article, email, or document here...
+
+Paragraphs separated by double newlines will be preserved."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">📥 Ingest</button>
+                </form>
+
+                <div id="ingestResult"></div>
+            </div>
+        </div>
+
+        <!-- Digest Tab -->
+        <div class="tab-content" id="digest">
+            <div class="card">
+                <h2>AI Digest</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                    Get an AI-powered analysis with summary, key signals, and action items
+                </p>
+
+                <form onsubmit="digestText(event)">
+                    <div class="form-group">
+                        <label for="digestText">Text to Analyze</label>
+                        <textarea id="digestText" required rows="12"
+                                  placeholder="Enter text to analyze...
+
+Meeting notes, emails, articles, or any content you want to understand quickly."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn" id="digestBtn">🤖 Analyze with AI</button>
+                </form>
+
+                <div id="digestResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let tags = [];
+
+        // Check API status
+        async function checkAPI() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                if (response.ok) {
+                    document.getElementById('apiStatus').className = 'api-status online';
+                    document.getElementById('apiStatus').innerHTML = '<span class="api-status-dot"></span><span>API Online</span>';
+                } else {
+                    throw new Error('API not responding');
+                }
+            } catch (error) {
+                document.getElementById('apiStatus').className = 'api-status offline';
+                document.getElementById('apiStatus').innerHTML = '<span class="api-status-dot"></span><span>API Offline</span>';
+            }
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Tag management
+        function addTag(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const input = event.target;
+                const value = input.value.trim();
+
+                if (value && !tags.includes(value)) {
+                    tags.push(value);
+                    renderTags();
+                    input.value = '';
+                }
+            }
+        }
+
+        function removeTag(tag) {
+            tags = tags.filter(t => t !== tag);
+            renderTags();
+        }
+
+        function renderTags() {
+            const container = document.getElementById('tagList');
+            const input = document.getElementById('tagInput');
+
+            container.innerHTML = '';
+            tags.forEach(tag => {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'tag';
+                tagEl.innerHTML = `${tag} <button type="button" onclick="removeTag('${tag}')">&times;</button>`;
+                container.appendChild(tagEl);
+            });
+            container.appendChild(input);
+        }
+
+        // Search
+        async function search() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+
+            const resultsDiv = document.getElementById('searchResults');
+            resultsDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Searching...</p></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/search?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if (data.results.length === 0) {
+                    resultsDiv.innerHTML = `
+                        <div class="empty-state">
+                            <p>No results found for "${query}"</p>
+                        </div>
+                    `;
+                } else {
+                    resultsDiv.innerHTML = `
+                        <div class="results">
+                            <h3 style="margin-bottom: 1rem;">Found ${data.results.length} result(s)</h3>
+                            ${data.results.map(r => `
+                                <div class="result-item">
+                                    <div class="result-filename">📄 ${r.filename}</div>
+                                    <div class="result-snippet">${r.snippet}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="alert alert-error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Search on Enter
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') search();
+        });
+
+        // Save Artifact
+        async function saveArtifact(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('artifactTitle').value;
+            const content = document.getElementById('artifactContent').value;
+            const resultDiv = document.getElementById('saveResult');
+
+            resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Saving...</p></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/artifact/save`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, content, tags })
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <div class="alert alert-success">
+                        ✅ Saved as <code>${data.filename}</code>
+                    </div>
+                `;
+
+                // Clear form
+                document.getElementById('artifactTitle').value = '';
+                document.getElementById('artifactContent').value = '';
+                tags = [];
+                renderTags();
+
+                // Refresh catalogue if on that tab
+                loadCatalogue();
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Ingest Text
+        async function ingestText(event) {
+            event.preventDefault();
+
+            const text = document.getElementById('ingestText').value;
+            const resultDiv = document.getElementById('ingestResult');
+
+            resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Ingesting...</p></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/ingest`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <div class="alert alert-success">
+                        ✅ Ingested as <code>${data.filename}</code><br>
+                        Chunks detected: ${data.chunks}
+                    </div>
+                `;
+
+                document.getElementById('ingestText').value = '';
+
+                // Refresh catalogue
+                loadCatalogue();
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Digest Text
+        async function digestText(event) {
+            event.preventDefault();
+
+            const text = document.getElementById('digestText').value;
+            const resultDiv = document.getElementById('digestResult');
+            const btn = document.getElementById('digestBtn');
+
+            resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Analyzing with AI... This may take 5-10 seconds</p></div>';
+            btn.disabled = true;
+            btn.textContent = '⏳ Analyzing...';
+
+            try {
+                const response = await fetch(`${API_BASE}/digest`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <div class="analysis-result">
+                        <h3>📝 Summary</h3>
+                        <p>${data.summary}</p>
+
+                        <h3>🎯 Key Signals</h3>
+                        <ul>
+                            ${data.signals.map(s => `<li>${s}</li>`).join('')}
+                        </ul>
+
+                        <h3>✅ Action Items</h3>
+                        <ul>
+                            ${data.actions.map(a => `<li>${a}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-error">❌ Error: ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🤖 Analyze with AI';
+            }
+        }
+
+        // Load Catalogue
+        async function loadCatalogue() {
+            const itemsDiv = document.getElementById('catalogueItems');
+            const statsDiv = document.getElementById('catalogueStats');
+            const sortBy = document.getElementById('sortBy').value;
+            const filterTag = document.getElementById('filterTag').value;
+            const refreshBtn = document.getElementById('catalogueRefreshBtn');
+
+            itemsDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading your knowledge base...</p></div>';
+            refreshBtn.textContent = '⏳ Loading...';
+
+            try {
+                const response = await fetch(`${API_BASE}/catalogue`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                let files = data.files;
+
+                // Collect all unique tags
+                const allTags = new Set();
+                files.forEach(f => f.tags.forEach(t => allTags.add(t)));
+
+                // Update tag filter dropdown
+                const tagFilter = document.getElementById('filterTag');
+                const currentFilter = tagFilter.value;
+                tagFilter.innerHTML = '<option value="">All Tags</option>';
+                Array.from(allTags).sort().forEach(tag => {
+                    const option = document.createElement('option');
+                    option.value = tag;
+                    option.textContent = tag;
+                    if (tag === currentFilter) option.selected = true;
+                    tagFilter.appendChild(option);
+                });
+
+                // Filter by tag
+                if (filterTag) {
+                    files = files.filter(f => f.tags.includes(filterTag));
+                }
+
+                // Sort files
+                files.sort((a, b) => {
+                    switch(sortBy) {
+                        case 'date-desc':
+                            return new Date(b.created_at || b.modified) - new Date(a.created_at || a.modified);
+                        case 'date-asc':
+                            return new Date(a.created_at || a.modified) - new Date(b.created_at || b.modified);
+                        case 'title':
+                            return a.title.localeCompare(b.title);
+                        default:
+                            return 0;
+                    }
+                });
+
+                // Show stats
+                const totalSize = files.reduce((sum, f) => sum + f.size, 0);
+                const formatSize = (bytes) => {
+                    if (bytes < 1024) return bytes + ' B';
+                    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+                    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+                };
+
+                statsDiv.innerHTML = `
+                    <div class="stat-mini">
+                        <div class="stat-mini-value">${files.length}</div>
+                        <div class="stat-mini-label">Total Items</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-value">${allTags.size}</div>
+                        <div class="stat-mini-label">Unique Tags</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="stat-mini-value">${formatSize(totalSize)}</div>
+                        <div class="stat-mini-label">Total Size</div>
+                    </div>
+                `;
+
+                if (files.length === 0) {
+                    itemsDiv.innerHTML = `
+                        <div class="empty-state">
+                            <p>${filterTag ? `No items with tag "${filterTag}"` : 'No knowledge base items yet. Start by saving your first artifact!'}</p>
+                        </div>
+                    `;
+                } else {
+                    itemsDiv.innerHTML = files.map(file => {
+                        const date = new Date(file.created_at || file.modified);
+                        const dateStr = date.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        });
+
+                        return `
+                            <div class="catalogue-item" onclick="viewFile('${file.filename}')">
+                                <div class="catalogue-item-header">
+                                    <div>
+                                        <div class="catalogue-item-title">${file.title}</div>
+                                        <div class="catalogue-item-filename">${file.filename}</div>
+                                    </div>
+                                    <div class="catalogue-item-date">${dateStr}</div>
+                                </div>
+                                ${file.tags.length > 0 ? `
+                                    <div class="catalogue-item-tags">
+                                        ${file.tags.map(tag => `<span class="catalogue-item-tag">${tag}</span>`).join('')}
+                                    </div>
+                                ` : ''}
+                                <div class="catalogue-item-preview">${file.preview}</div>
+                                <div class="catalogue-item-meta">
+                                    <span>📄 ${formatSize(file.size)}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (error) {
+                itemsDiv.innerHTML = `<div class="alert alert-error">❌ Error loading catalogue: ${error.message}</div>`;
+            } finally {
+                refreshBtn.textContent = '🔄 Refresh';
+            }
+        }
+
+        function viewFile(filename) {
+            // For now, just show an alert. Could expand to show full content in modal
+            alert(`Viewing: ${filename}\n\nFull file viewer coming soon!\n\nFile location: knowledge/${filename}`);
+        }
+
+        // Initialize
+        checkAPI();
+        loadCatalogue(); // Load catalogue on startup
+        setInterval(checkAPI, 30000); // Check every 30 seconds
+    </script>
+</body>
+</html>

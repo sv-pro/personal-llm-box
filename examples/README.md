@@ -230,7 +230,7 @@ Build a simple mobile app that:
 
 Check the main documentation:
 - `README.md` - Full API reference
-- `QUICKSTART.md` - Getting started guide
-- `VERIFICATION_PLAN.md` - All endpoint examples
+- `docs/quickstart.md` - Getting started guide
+- `docs/verification-plan.md` - All endpoint examples
 
 Or explore the `app/routes/` directory to see what each endpoint does.

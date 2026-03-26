@@ -372,9 +372,9 @@ def main():
     parser.add_argument('--strategy', choices=['simple_grep', 'multi_query', 'vector_search', 'all'],
                        default='simple_grep', help='Retrieval strategy to test')
     parser.add_argument('--output', type=str, help='Output JSON file for detailed results')
-    parser.add_argument('--knowledge-dir', type=str, default='evaluation/knowledge',
+    parser.add_argument('--knowledge-dir', type=str, default='evaluation/data/knowledge',
                        help='Path to knowledge directory')
-    parser.add_argument('--questions', type=str, default='evaluation/questions.json',
+    parser.add_argument('--questions', type=str, default='evaluation/data/questions.json',
                        help='Path to questions JSON file')
 
     args = parser.parse_args()

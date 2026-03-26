@@ -32,6 +32,25 @@ personal-llm-box/
 ├── web-ui/                 # Web interface (served at /web)
 │   ├── index.html          # Single-page app with 5 tabs
 │   └── README.md           # Web UI technical docs
+├── docs/                   # Project documentation
+│   ├── quickstart.md       # Quick start guide
+│   ├── web-ui-guide.md     # Web UI user guide
+│   ├── catalogue-feature.md # Catalogue feature docs
+│   ├── branching-guide.md  # Git branching strategy
+│   ├── experiments.md      # Retrieval experiments overview
+│   ├── verification-plan.md # Testing procedures
+│   ├── verification-results.md # Test results
+│   └── inspiration.md      # AI agent resources
+├── evaluation/             # Test-driven evaluation framework
+│   ├── README.md           # Evaluation index & overview
+│   ├── evaluate.py         # Pluggable evaluation engine
+│   ├── requirements.txt    # Evaluation-specific dependencies
+│   ├── data/               # Test datasets
+│   │   ├── questions.json
+│   │   ├── questions-hard.json
+│   │   └── knowledge/      # Sample knowledge base
+│   ├── research/           # Architectural analysis docs
+│   └── results/            # Benchmark outputs
 ├── examples/               # Usage examples (shell scripts, Python)
 │   ├── README.md           # Examples documentation
 │   ├── save_daily_notes.sh
@@ -43,12 +62,7 @@ personal-llm-box/
 ├── Dockerfile              # Python 3.12-slim + git + uvicorn
 ├── setup.sh                # Smart setup script (detects native Ollama, recommends models)
 ├── requirements.txt        # fastapi, uvicorn, requests, pydantic
-├── README.md               # End-user documentation
-├── QUICKSTART.md           # Quick start guide
-├── WEB_UI_GUIDE.md         # Web UI user guide
-├── CATALOGUE_FEATURE.md    # Catalogue feature documentation
-├── VERIFICATION_PLAN.md    # Testing procedures
-└── VERIFICATION_RESULTS.md # Test results
+└── README.md               # End-user documentation
 ```
 
 ---
@@ -186,7 +200,7 @@ experiments/retrieval/<technique> → experiments/retrieval → main
 **Guidelines:**
 1. **Keep `main` stable** — Simple grep search, proven and working
 2. **Branch from `experiments/retrieval`** — Not from main
-3. **Document everything** — Create `EXPERIMENTS.md` in branch with results
+3. **Document everything** — Create experiment docs in `docs/` or `evaluation/research/` with results
 4. **Compare objectively** — Benchmark speed, accuracy, resource usage
 5. **Merge only when proven** — Test thoroughly before merging to main
 

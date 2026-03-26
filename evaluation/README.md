@@ -9,9 +9,9 @@
 
 **New to this project?** Read in this order:
 
-1. **README.md** - Understand the test-driven evaluation framework
-2. **SYNTHESIS_AND_DECISION.md** - See the complete analysis and decisions
-3. **GETTING_STARTED_PHASE1.md** - Start implementing today
+1. **[research/evaluation-framework.md](research/evaluation-framework.md)** - Understand the test-driven evaluation framework
+2. **[research/SYNTHESIS_AND_DECISION.md](research/SYNTHESIS_AND_DECISION.md)** - See the complete analysis and decisions
+3. **[research/GETTING_STARTED_PHASE1.md](research/GETTING_STARTED_PHASE1.md)** - Start implementing today
 
 **Returning to continue work?**
 
@@ -25,52 +25,56 @@
 
 | Document | Purpose | Read When |
 |----------|---------|-----------|
-| **SYNTHESIS_AND_DECISION.md** | Executive summary, decision matrix, comparative analysis | Starting the project |
-| **ONTOLOGY_FIRST_ROADMAP.md** | 5-week implementation plan with code examples | Planning Phase 1 |
-| **GETTING_STARTED_PHASE1.md** | Step-by-step guide for Week 1 implementation | Ready to code |
+| **[research/SYNTHESIS_AND_DECISION.md](research/SYNTHESIS_AND_DECISION.md)** | Executive summary, decision matrix, comparative analysis | Starting the project |
+| **[research/ONTOLOGY_FIRST_ROADMAP.md](research/ONTOLOGY_FIRST_ROADMAP.md)** | 5-week implementation plan with code examples | Planning Phase 1 |
+| **[research/GETTING_STARTED_PHASE1.md](research/GETTING_STARTED_PHASE1.md)** | Step-by-step guide for Week 1 implementation | Ready to code |
 
 ### 📊 Evaluation Framework
 
 | Document | Purpose | Lines |
 |----------|---------|-------|
-| **README.md** | Evaluation framework overview, how to run tests | 385 |
-| **QUICKSTART.md** | Fast introduction to running evaluations | 235 |
-| **evaluate.py** | Pluggable evaluation engine (Python script) | - |
-| **questions.json** | 12 easy test questions with expected answers | - |
-| **questions-hard.json** | 18 hard questions testing reasoning capabilities | - |
+| **[research/evaluation-framework.md](research/evaluation-framework.md)** | Evaluation framework overview, how to run tests | 385 |
+| **[QUICKSTART.md](QUICKSTART.md)** | Fast introduction to running evaluations | 235 |
+| **[evaluate.py](evaluate.py)** | Pluggable evaluation engine (Python script) | - |
+| **[data/questions.json](data/questions.json)** | 12 easy test questions with expected answers | - |
+| **[data/questions-hard.json](data/questions-hard.json)** | 18 hard questions testing reasoning capabilities | - |
 
 ### 🏗️ Architectural Analysis
 
 | Document | Focus Area | Key Insight | Lines |
 |----------|-----------|-------------|-------|
-| **ARCHITECTURAL_PRINCIPLES.md** | Core constraints | Lobotomy Test + MCP decoupling | 737 |
-| **ARCHITECTURE_TRADEOFFS.md** | Retrieval × Reasoning | LLM vs Logic vs Hybrid | 651 |
-| **STORAGE_DIMENSION.md** | Storage structure | Flat vs Hierarchical vs Graph | 694 |
-| **AGENT_HYPERVISOR_CONCEPTS.md** | Ontology-first design | Security by architectural absence | 616 |
+| **[research/ARCHITECTURAL_PRINCIPLES.md](research/ARCHITECTURAL_PRINCIPLES.md)** | Core constraints | Lobotomy Test + MCP decoupling | 737 |
+| **[research/ARCHITECTURE_TRADEOFFS.md](research/ARCHITECTURE_TRADEOFFS.md)** | Retrieval × Reasoning | LLM vs Logic vs Hybrid | 651 |
+| **[research/STORAGE_DIMENSION.md](research/STORAGE_DIMENSION.md)** | Storage structure | Flat vs Hierarchical vs Graph | 694 |
+| **[research/AGENT_HYPERVISOR_CONCEPTS.md](research/AGENT_HYPERVISOR_CONCEPTS.md)** | Ontology-first design | Security by architectural absence | 616 |
 
 ### 📈 Results & Analysis
 
 | Document | What It Shows | Lines |
 |----------|---------------|-------|
-| **INITIAL_RESULTS.md** | First baseline evaluation results | 188 |
-| **VECTOR_SEARCH_BASELINE.md** | Vector search implementation and benchmarks | 311 |
-| **HARD_QUESTIONS_DESIGN.md** | Rationale for hard question dataset | 273 |
-| **HARD_QUESTIONS_RESULTS.md** | Performance on hard questions | 322 |
-| **COMPLETE_LANDSCAPE.md** | Current state summary of everything | 722 |
+| **[research/INITIAL_RESULTS.md](research/INITIAL_RESULTS.md)** | First baseline evaluation results | 188 |
+| **[research/VECTOR_SEARCH_BASELINE.md](research/VECTOR_SEARCH_BASELINE.md)** | Vector search implementation and benchmarks | 311 |
+| **[research/HARD_QUESTIONS_DESIGN.md](research/HARD_QUESTIONS_DESIGN.md)** | Rationale for hard question dataset | 273 |
+| **[research/HARD_QUESTIONS_RESULTS.md](research/HARD_QUESTIONS_RESULTS.md)** | Performance on hard questions | 322 |
+| **[research/COMPLETE_LANDSCAPE.md](research/COMPLETE_LANDSCAPE.md)** | Current state summary of everything | 722 |
 
 ### 🔬 Research Documents
 
 | Document | Exploration Area | Lines |
 |----------|------------------|-------|
-| **MISSING_DIMENSIONS.md** | Unexplored experimental space (16+ dimensions) | 1140 |
+| **[research/MISSING_DIMENSIONS.md](research/MISSING_DIMENSIONS.md)** | Unexplored experimental space (16+ dimensions) | 1140 |
 
 ### 📁 Supporting Materials
 
 ```
 evaluation/
-├── knowledge/              # 10 test documents (sample knowledge base)
+├── research/               # Architectural analysis & research documents
+├── data/
+│   ├── knowledge/          # 10 test documents (sample knowledge base)
+│   ├── questions.json      # Easy test questions
+│   └── questions-hard.json # Hard test questions
 ├── results/                # JSON output from evaluation runs
-└── scripts/                # Helper scripts
+└── evaluate.py             # Pluggable evaluation engine
 ```
 
 ---
@@ -293,7 +297,7 @@ python evaluation/evaluate.py --strategy multi_query
 python evaluation/evaluate.py --strategy vector_search
 
 # Test on hard questions
-python evaluation/evaluate.py --questions evaluation/questions-hard.json
+python evaluation/evaluate.py --questions evaluation/data/questions-hard.json
 
 # Compare all strategies
 python evaluation/evaluate.py --strategy all --output results/comparison.json

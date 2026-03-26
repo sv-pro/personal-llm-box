@@ -188,4 +188,4 @@ Once everything is running:
 4. **Read the full documentation:**
    - `README.md` - Complete API reference
    - `CLAUDE.md` - Developer guide
-   - `VERIFICATION_PLAN.md` - Testing procedures
+   - `docs/verification-plan.md` - Testing procedures

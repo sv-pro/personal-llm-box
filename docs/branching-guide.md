@@ -367,7 +367,7 @@ YOU ARE HERE ──┐
 
 ## Need Help?
 
-- Read `EXPERIMENTS.md` for experiment guidelines
+- Read `docs/experiments.md` for experiment guidelines
 - Read `CLAUDE.md` for branching strategy details
 - Check `git status` to see what's happening
 - Use `git log --oneline --graph` to visualize branches

@@ -301,9 +301,9 @@ Full API docs: See `README.md`
 
 ## Need Help?
 
-- **Documentation:** `README.md`, `QUICKSTART.md`
+- **Documentation:** `README.md`, `docs/quickstart.md`
 - **Examples:** `examples/` directory
-- **Verification:** `VERIFICATION_PLAN.md`
+- **Verification:** `docs/verification-plan.md`
 - **GitHub:** Report issues
 
 ---
